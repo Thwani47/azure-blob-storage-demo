@@ -1,5 +1,4 @@
 # Azure Blob Storage Demo
-----
 A demo project using React and Azure Blob Storage to get file data and metadata
 
 ## Architecure

@@ -1,0 +1,7 @@
+$projectName = "azure-blob-storage-demo"
+$resourceGroup = "$projectName-rg"
+$location = "eastus"
+$appServicePlan = "$projectName-sp"
+$webAppService = "$projectName-webapp"
+$apiAppService = "$projectName-api"
+$azureStorageAccount = "demostorageaccb8da094c"
