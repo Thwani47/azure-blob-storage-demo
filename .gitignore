@@ -11,5 +11,6 @@ appsettings.Development.json
 /wwwroot/node_modules
 .idea/
 Folder.DotSettings.user
+deploy/
 
 # End of https://www.toptal.com/developers/gitignore/api/dotnetcore

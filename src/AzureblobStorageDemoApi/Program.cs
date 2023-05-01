@@ -35,6 +35,34 @@ app.MapGet("/account", async (IAzureBlobStorageDemoService service) =>
         Console.WriteLine(e);
         return Results.StatusCode(500);
     }
-});
+}).WithName("GetAccountData");
+
+app.MapGet("/account/containers", async (IAzureBlobStorageDemoService service) =>
+{
+    try
+    {
+        var data = await service.GetAccountContainers();
+        return Results.Ok(data);
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine(e);
+        return Results.StatusCode(500);
+    }
+}).WithName("GetContainers");
+
+app.MapPost("account/container/{name}", async (string name, IAzureBlobStorageDemoService service) =>
+{
+    try
+    {
+        var response = await service.CreateContainer(name);
+        return Results.Created(response.Uri, response);
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine(e);
+        throw;
+    }
+}).WithName("AddContainer");
 
 app.Run();
