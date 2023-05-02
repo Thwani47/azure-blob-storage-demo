@@ -4,3 +4,9 @@ export interface StorageAccountData {
   sku: string;
   accountKind: string;
 }
+
+export interface ContainerData {
+  name: string;
+  uri: string;
+  metadata: { [key: string]: string };
+}

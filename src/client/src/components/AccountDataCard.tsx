@@ -10,7 +10,7 @@ export default function AccountDataCard({ accountData }: Props) {
       <div className="card-body">
         <div className="flex justify-between space-x-40">
           <h2 className="font-bold">Account Name: </h2>
-          <h2 className="">{accountData.accountName}</h2>
+          <h2>{accountData.accountName}</h2>
         </div>
         <div className="flex justify-between space-x-40">
           <h1 className="font-bold">Uri:</h1>
