@@ -1,5 +1,7 @@
 using AzureblobStorageDemoApi.Extensions;
+using AzureblobStorageDemoApi.Models;
 using AzureblobStorageDemoApi.Services;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 var env = builder.Environment;
@@ -68,6 +70,21 @@ app.MapPost("account/container/{name}", async (string name, IAzureBlobStorageDem
     }
 }).WithName("AddContainer");
 
+app.MapPost("account/container/{name}/metadata",
+    async (string name, [FromBody] MetadataInput metadata, IAzureBlobStorageDemoService service) =>
+    {
+        try
+        {
+            await service.AddContainerMetadata(name, metadata);
+            return Results.Ok();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }).WithName("AddContainerMetadata");
+
 app.MapGet("account/container/{name}", async (string name, IAzureBlobStorageDemoService service) =>
 {
     try
@@ -86,7 +103,7 @@ app.MapDelete("account/container/{name}", async (string name, IAzureBlobStorageD
 {
     try
     {
-         await service.DeleteContainer(name);
+        await service.DeleteContainer(name);
         return Results.Ok();
     }
     catch (Exception e)

@@ -13,8 +13,6 @@ export default function ContainerList({ containers }: Props) {
         <thead>
           <tr>
             <th>Name</th>
-            <th>URI</th>
-            <th>Metadata</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -22,14 +20,6 @@ export default function ContainerList({ containers }: Props) {
           {containers.map((container, i) => (
             <tr key={i}>
               <td>{container.name}</td>
-              <td>{container.uri}</td>
-              <td>
-                <ul>
-                  {Object.keys(container.metadata).map((key, index) => (
-                    <li key={index}>{container.metadata[key]}</li>
-                  ))}
-                </ul>
-              </td>
               <td>
                 <button
                   className="btn btn-primary"

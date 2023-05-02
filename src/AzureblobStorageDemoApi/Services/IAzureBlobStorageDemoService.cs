@@ -10,4 +10,6 @@ public interface IAzureBlobStorageDemoService
     public Task<ContainerData> GetContainerData(string containerName);
 
     public Task DeleteContainer(string containerName);
+
+    public Task AddContainerMetadata(string containerName, MetadataInput metadataInput);
 }

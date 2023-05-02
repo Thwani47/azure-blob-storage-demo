@@ -175,4 +175,27 @@ public class AzureBlobStorageDemoService : IAzureBlobStorageDemoService
             throw;
         }
     }
+
+    public async Task AddContainerMetadata(string containerName, MetadataInput metadataInput)
+    {
+        try
+        {
+            var containerClient = _serviceClient.GetBlobContainerClient(containerName);
+
+            if (_cache.TryGetValue($"{StringConstants.AccountContainerCacheKey}_{containerName}", out _))
+            {
+                _cache.Remove($"{StringConstants.AccountContainerCacheKey}_{containerName}");
+            }
+
+            var response = (await containerClient.SetMetadataAsync(new Dictionary<string, string>
+            {
+                { metadataInput.Key, metadataInput.Value }
+            })).Value;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
 }
