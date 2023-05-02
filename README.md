@@ -4,6 +4,9 @@ A demo project using React and Azure Blob Storage to get file data and metadata
 ## Architecure
 ![architecture](./assets/architecure.png)
 
+## Demo
+![alt](./assets//demo.gif)
+
 ## Deploying to Azure
 ```bash
 $> az login

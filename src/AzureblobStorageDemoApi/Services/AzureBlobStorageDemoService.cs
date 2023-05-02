@@ -165,6 +165,7 @@ public class AzureBlobStorageDemoService : IAzureBlobStorageDemoService
             if (_cache.TryGetValue($"{StringConstants.AccountContainerCacheKey}_{containerName}", out _))
             {
                 _cache.Remove($"{StringConstants.AccountContainerCacheKey}_{containerName}");
+                _cache.Remove(StringConstants.AccountContainersCacheKey);
             }
 
             await containerClient.DeleteAsync();
@@ -185,13 +186,14 @@ public class AzureBlobStorageDemoService : IAzureBlobStorageDemoService
             if (_cache.TryGetValue($"{StringConstants.AccountContainerCacheKey}_{containerName}", out _))
             {
                 _cache.Remove($"{StringConstants.AccountContainerCacheKey}_{containerName}");
+                _cache.Remove(StringConstants.AccountContainersCacheKey);
             }
 
             var metaData = (await containerClient.GetPropertiesAsync()).Value.Metadata;
 
             metaData?.Add(metadataInput.Key, metadataInput.Value);
 
-            var response = (await containerClient.SetMetadataAsync(metaData)).Value;
+            await containerClient.SetMetadataAsync(metaData);
         }
         catch (Exception e)
         {
