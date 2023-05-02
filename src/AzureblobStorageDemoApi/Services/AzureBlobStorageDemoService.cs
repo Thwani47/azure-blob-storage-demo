@@ -187,10 +187,11 @@ public class AzureBlobStorageDemoService : IAzureBlobStorageDemoService
                 _cache.Remove($"{StringConstants.AccountContainerCacheKey}_{containerName}");
             }
 
-            var response = (await containerClient.SetMetadataAsync(new Dictionary<string, string>
-            {
-                { metadataInput.Key, metadataInput.Value }
-            })).Value;
+            var metaData = (await containerClient.GetPropertiesAsync()).Value.Metadata;
+
+            metaData?.Add(metadataInput.Key, metadataInput.Value);
+
+            var response = (await containerClient.SetMetadataAsync(metaData)).Value;
         }
         catch (Exception e)
         {
