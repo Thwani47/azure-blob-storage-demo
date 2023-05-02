@@ -76,7 +76,9 @@ public class AzureBlobStorageDemoService : IAzureBlobStorageDemoService
                     };
 
 
-                    container.Metadata = containerItem.Properties.Metadata != null ? new Dictionary<string, string>(containerItem.Properties.Metadata) : new Dictionary<string, string>();
+                    container.Metadata = containerItem.Properties.Metadata != null
+                        ? new Dictionary<string, string>(containerItem.Properties.Metadata)
+                        : new Dictionary<string, string>();
 
                     containers.Add(container);
                 }
@@ -105,7 +107,7 @@ public class AzureBlobStorageDemoService : IAzureBlobStorageDemoService
             }
 
             var properties = (await container.GetPropertiesAsync()).Value;
-            
+
             _cache.Remove(StringConstants.AccountContainersCacheKey);
 
             return new ContainerData
@@ -114,6 +116,58 @@ public class AzureBlobStorageDemoService : IAzureBlobStorageDemoService
                 Uri = container.Uri.ToString(),
                 Metadata = new Dictionary<string, string>(properties.Metadata)
             };
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task<ContainerData> GetContainerData(string containerName)
+    {
+        try
+        {
+            if (_cache.TryGetValue($"{StringConstants.AccountContainerCacheKey}_{containerName}",
+                    out ContainerData container))
+            {
+                return container;
+            }
+
+            var containerClient = _serviceClient.GetBlobContainerClient(containerName);
+
+            var properties = (await containerClient.GetPropertiesAsync()).Value;
+
+
+            container = new ContainerData
+            {
+                Name = containerClient.Name,
+                Uri = containerClient.Uri.ToString(),
+                Metadata = new Dictionary<string, string>(properties.Metadata)
+            };
+
+            _cache.Set($"{StringConstants.AccountContainerCacheKey}_{containerName}", container, _cacheOptions);
+            return container;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+    public async Task DeleteContainer(string containerName)
+    {
+        try
+        {
+            var containerClient = _serviceClient.GetBlobContainerClient(containerName);
+
+            if (_cache.TryGetValue($"{StringConstants.AccountContainerCacheKey}_{containerName}", out _))
+            {
+                _cache.Remove($"{StringConstants.AccountContainerCacheKey}_{containerName}");
+            }
+
+            await containerClient.DeleteAsync();
         }
         catch (Exception e)
         {

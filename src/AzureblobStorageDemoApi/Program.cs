@@ -23,7 +23,7 @@ var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{builder.Environment.ApplicationName} v1"));
 
-app.UseCors(builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
+app.UseCors(policyBuilder => { policyBuilder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
 
 
 app.MapGet("/account", async (IAzureBlobStorageDemoService service) =>
@@ -67,5 +67,33 @@ app.MapPost("account/container/{name}", async (string name, IAzureBlobStorageDem
         throw;
     }
 }).WithName("AddContainer");
+
+app.MapGet("account/container/{name}", async (string name, IAzureBlobStorageDemoService service) =>
+{
+    try
+    {
+        var response = await service.GetContainerData(name);
+        return Results.Ok(response);
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine(e);
+        throw;
+    }
+}).WithName("GetContainer");
+
+app.MapDelete("account/container/{name}", async (string name, IAzureBlobStorageDemoService service) =>
+{
+    try
+    {
+         await service.DeleteContainer(name);
+        return Results.Ok();
+    }
+    catch (Exception e)
+    {
+        Console.WriteLine(e);
+        throw;
+    }
+}).WithName("DeleteContainer");
 
 app.Run();

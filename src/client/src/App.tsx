@@ -4,6 +4,7 @@ import { client } from "./api";
 import { ContainerData, StorageAccountData } from "./types";
 import AccountDataCard from "./components/AccountDataCard";
 import { useState } from "react";
+import ContainerList from "./components/ContainerList";
 
 function App() {
   const [containerNameInput, setContainerNameInput] = useState<string>("");
@@ -59,11 +60,12 @@ function App() {
             type="text"
             placeholder="Enter container name"
             maxLength={30}
-            value={containerNameInput}
+            value={containerNameInput || ''}
             className="input input-bordered input-accent w-full max-w-xs"
             onChange={(e) => setContainerNameInput(e.target.value)}
           />
           <button
+            disabled={containerNameInput.length === 0}
             className={`btn btn-accent ${
               createContainerMutation.isLoading ? "loading" : ""
             }`}
@@ -90,7 +92,7 @@ function App() {
             Error occured :{fetchContainersError.message}
           </h1>
         ) : (
-          <h1>{containers.length}</h1>
+          <ContainerList containers={containers}/>
         )}
       </div>
     </div>
