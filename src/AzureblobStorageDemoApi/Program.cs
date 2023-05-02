@@ -8,7 +8,7 @@ builder.Configuration.AddJsonFile("appsettings.json", true, true);
 builder.Configuration.AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddAzureBlobServiceCollection(builder.Configuration);
-
+builder.Services.AddCors();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -22,6 +22,9 @@ builder.Services.AddSwaggerGen(c =>
 var app = builder.Build();
 app.UseSwagger();
 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", $"{builder.Environment.ApplicationName} v1"));
+
+app.UseCors(builder => { builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader(); });
+
 
 app.MapGet("/account", async (IAzureBlobStorageDemoService service) =>
 {
